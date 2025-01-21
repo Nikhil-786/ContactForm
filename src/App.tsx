@@ -13,7 +13,7 @@ function App() {
             </label>
 
             <input type="text" className="inputDetails " />
-
+              
             <label htmlFor="First Name *" id="lname">
               Last Name*
             </label>
