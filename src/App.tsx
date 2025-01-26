@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import "./App.css";
 import "./index.css";
@@ -7,12 +8,19 @@ function App() {
   const data = { firstName: "", lastName: "", email: "", message: "" };
 
   const [inputValue, setInputValue] = useState(data);
-  const [errorValue, setError] = useState({});
-  function handleData(e) {
+  const [errorValue, setError] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    message: "",
+    QueryType: "",
+    conscent: "",
+  });
+  function handleData(e: React.ChangeEvent<HTMLTextAreaElement|HTMLInputElement >) {
     setInputValue({ ...inputValue, [e.target.name]: e.target.value });
   }
 
-  function handleSubmit(e) {
+  function handleSubmit(e:React.FormEvent<HTMLFormElement>) {
     console.log(e);
     e.preventDefault();
     const errorValidation: {
@@ -30,7 +38,9 @@ function App() {
       QueryType: "",
       conscent: "",
     };
-
+    const queryType1 = e.currentTarget[3] as HTMLInputElement;
+    const queryType2 = e.currentTarget[4] as HTMLInputElement;
+    const consentCheckbox = e.currentTarget[6] as HTMLInputElement;
     if (!inputValue.firstName.trim()) {
       errorValidation.firstName = "This field is required";
     }
@@ -44,11 +54,11 @@ function App() {
     if (!inputValue.message.trim()) {
       errorValidation.message = "This field is required";
     }
-    if (e.target[3].checked === false && e.target[4].checked === false) {
+    if (queryType1.checked === false && queryType2.checked === false) {
       console.log("query type called");
       errorValidation.QueryType = "Please Select the query Type";
     }
-    if (e.target[6].checked === false) {
+    if (consentCheckbox.checked === false) {
       console.log("conscent called");
       errorValidation.conscent =
         "To submit this form, Please conscent to being contacted";
@@ -61,11 +71,14 @@ function App() {
       inputValue.lastName &&
       inputValue.email &&
       inputValue.message &&
-      (e.target[3].value == "General Enquiry" ||
-        e.target[4].value == "Support Request") &&
-      e.target[6].checked
+      (queryType1.value == "General Enquiry" ||
+        queryType2.value == "Support Request") &&
+        consentCheckbox.checked
     ) {
       toast.success("Thank for completing the form.We'll be in touch Soon!");
+      consentCheckbox.checked = false;
+
+      setInputValue(data);
     }
   }
 
